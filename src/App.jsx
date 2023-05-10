@@ -37,6 +37,7 @@ import Draft from "./pages/Draft";
 import Main from "./pages/Main";
 import Catalog from "./pages/Catalog";
 import Profile from "./pages/Profile";
+import Product from "./pages/Product";
 
 /*
     TODO: проработать материал с лекции:
@@ -97,18 +98,25 @@ const App = () => {
                 setModalActive={setModalActive}
             />
             <main>
-                <Search arr={[]} upd={() => {}}/>
+                <a href="/product/645287f08fbc473fa8a2e2b0">Товар</a>
+                <Search arr={serverGoods} upd={setGoods}/>
                 {/* 
                     SPA - Single Page Application (одностраничное)
                 */}
                 <Routes>
                     <Route path="/" element={<Main/>}/>
-                    <Route path="/catalog" element={<Catalog/>}/>
+                    <Route path="/catalog" element={<Catalog goods={goods}/>}/>
                     <Route path="/draft" element={<Draft/>}/>
                     <Route path="/profile" element={
                         <Profile user={user} setUser={setUser} color="yellow"/>
                     }/>
+                    <Route path="/product/:id" element={<Product/>}/>
                 </Routes>
+                {/* 
+                    /v2/:gr/posts/likes/:id
+                    /v2/group-12/posts/likes/83745613476812
+                    /v2/group-9/posts/likes/768883746527383
+                */}
             </main>
             <Footer/>
             <Modal 
