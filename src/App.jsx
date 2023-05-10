@@ -98,7 +98,6 @@ const App = () => {
                 setModalActive={setModalActive}
             />
             <main>
-                <a href="/product/645287f08fbc473fa8a2e2b0">Товар</a>
                 <Search arr={serverGoods} upd={setGoods}/>
                 {/* 
                     SPA - Single Page Application (одностраничное)
