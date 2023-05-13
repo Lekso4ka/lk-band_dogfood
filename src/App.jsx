@@ -73,8 +73,10 @@ const App = () => {
     }, [token])
 
     useEffect(() => {
-        console.log("=)")
-        setGoods(serverGoods);
+        if (!goods.length) {
+            console.log("=)")
+            setGoods(serverGoods);
+        }
     }, [serverGoods]);
 
     // useEffect(() => {
@@ -104,7 +106,11 @@ const App = () => {
                 */}
                 <Routes>
                     <Route path="/" element={<Main/>}/>
-                    <Route path="/catalog" element={<Catalog goods={goods}/>}/>
+                    <Route path="/catalog" element={<Catalog 
+                        goods={goods} 
+                        // Когда мы ставим лайк на товар - его нужно обновить в общем массиве с товарами (иначе лайк поставится только в карточке, но после изменения страницы (переходе между страницами) мы его больше не увидим)
+                        setServerGoods={setServerGoods}
+                    />}/>
                     <Route path="/draft" element={<Draft/>}/>
                     <Route path="/profile" element={
                         <Profile user={user} setUser={setUser} color="yellow"/>
