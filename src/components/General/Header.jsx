@@ -7,9 +7,16 @@ import {
     PersonSquare, 
     BoxArrowInRight
 } from "react-bootstrap-icons";
+import { useState, useEffect } from "react";
 
-const Header = ({user, setModalActive}) => {
-    
+const Header = ({user, setModalActive, serverGoods}) => {
+    const [likeCnt, setLikeCnt] = useState(0);
+    const [cartCnt, setCartCnt] = useState(0);
+    useEffect(() => {
+        // Фильтруем только те товары, у которых в лайках есть id нашего пользователя - id берем из ls, ибо мы про него забыли))
+        setLikeCnt(serverGoods.filter(el => el.likes.includes(localStorage.getItem("rockId"))).length)
+    }, [serverGoods]);
+
     const logIn = (e) => {
         e.preventDefault();
         // setUser("lk-band");
@@ -22,14 +29,17 @@ const Header = ({user, setModalActive}) => {
         <nav className="header__menu">
             {/* Если пользователь === true */}
             {user && <>
-                <Link to="/catalog" title="Каталог">
+                <Link to="/catalog" title="Каталог" className="badge-el">
                     <Folder2/>
+                    {/* <span className="badge-item">{serverGoods.length}</span> */}
                 </Link>
-                <Link to="/" title="Избранное">
+                <Link to="/favorites" title="Избранное" className="badge-el">
                     <Star/>
+                    <span className="badge-item">{likeCnt}</span>
                 </Link>
-                <Link to="/" title="Корзина">
+                <Link to="/" title="Корзина" className="badge-el">
                     <Cart4/>
+                    <span className="badge-item">{cartCnt}</span>
                 </Link>
                 <Link to="/profile" title="Профиль">
                     <PersonSquare/>

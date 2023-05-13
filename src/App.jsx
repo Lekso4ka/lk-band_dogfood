@@ -1,29 +1,3 @@
-/*
-    Зачем здесь LS?
-    Когда я запускаю программу, я сразу хочу видеть данные
-    Но сервер говорит - у тебя нет токена, значит тебя нет, значит данных не будет (ИБ)
-
-    Я вошла в систему и получила токен, поработала с данными и выключила React
-
-    Когда я зайду снова - мне снова прийдется авторизоваться (чтобы получить токен)
-
-    Что делать?
-
-    Создавать переменную
-    token="ey1242325..."
-
-    При работе с облачными ресурсами (github) можно скомпроментировать свой токен и робот, получивший токен может обрушить нам всю БД
-
-    Что делать?
-    Созранить его в браузер
-
-    localStorage.getItem("token")
-
-    UserName и userId в ls можно и не хранить - можно принимать решение о том, что должно, а что не должно быть в LS самостоятельно
-
-    Если у меня есть токен и он хр в переменной, а инф-я об имени пользователя нужна только в ЛК => Открыть страницу профиля и отправляем запрос на получение данных о пользователе, после чего отображаем их
-*/
-
 import {useState, useEffect} from "react";
 import {Routes, Route} from "react-router-dom";
 
@@ -38,17 +12,12 @@ import Main from "./pages/Main";
 import Catalog from "./pages/Catalog";
 import Profile from "./pages/Profile";
 import Product from "./pages/Product";
-
-/*
-    TODO: проработать материал с лекции:
-    - Изменить ссылки на Link внутри Logo и Footer
-    - После входа перенаправлять пользователя на страница профиля (useNavigate)
-    - В подвал добавить ссылку на Draft
-*/
+import Favorites from "./pages/Favorites";
 
 const App = () => {
     const [user, setUser] = useState(localStorage.getItem("rockUser"));
     const [token, setToken] = useState(localStorage.getItem("rockToken"));
+    const [userId, setUserId] = useState(localStorage.getItem("rockId"));
     // Товары из БД
     const [serverGoods, setServerGoods] = useState([]);
     // Товары для поиска и филтрации
@@ -67,7 +36,7 @@ const App = () => {
                 .then(res => res.json())
                 .then(data => {
                     console.log(data);
-                    setServerGoods(data.products);
+                    setServerGoods(data.products.sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime()));
                 })
         }
     }, [token])
@@ -79,25 +48,24 @@ const App = () => {
         }
     }, [serverGoods]);
 
-    // useEffect(() => {
-    //     console.log("Модалка изменилась")
-    // }, [modalActive])
-
     useEffect(() => {
         console.log("Change User")
         if (user) {
             setToken(localStorage.getItem("rockToken"));
+            setUserId(localStorage.getItem("rockId"));
         } else {
             setToken("");
+            setUserId("");
         }
         console.log("u", user);
-    }, [user])
+    }, [user]);
 
     return (
         <>
             <Header 
                 user={user} 
                 setModalActive={setModalActive}
+                serverGoods={serverGoods}
             />
             <main>
                 <Search arr={serverGoods} upd={setGoods}/>
@@ -109,6 +77,11 @@ const App = () => {
                     <Route path="/catalog" element={<Catalog 
                         goods={goods} 
                         // Когда мы ставим лайк на товар - его нужно обновить в общем массиве с товарами (иначе лайк поставится только в карточке, но после изменения страницы (переходе между страницами) мы его больше не увидим)
+                        setServerGoods={setServerGoods}
+                    />}/>
+                    <Route path="/favorites" element={<Favorites 
+                        goods={goods}
+                        userId={userId}
                         setServerGoods={setServerGoods}
                     />}/>
                     <Route path="/draft" element={<Draft/>}/>
