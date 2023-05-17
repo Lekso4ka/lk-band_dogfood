@@ -30,6 +30,8 @@ import Product from "./pages/Product";
 import Favorites from "./pages/Favorites";
 
 const App = () => {
+    // let key = "6c7fc5e6a754429ab47063a1b1a54774"
+    "https://newsapi.org/v2/everything?apiKey=6c7fc5e6a754429ab47063a1b1a54774&q=dogs"
     const [user, setUser] = useState(localStorage.getItem("rockUser"));
     const [token, setToken] = useState(localStorage.getItem("rockToken"));
     const [userId, setUserId] = useState(localStorage.getItem("rockId"));
@@ -37,7 +39,16 @@ const App = () => {
     const [serverGoods, setServerGoods] = useState([]);
     // Товары для поиска и филтрации
     const [goods, setGoods] = useState(serverGoods);
-
+    // Получаем новости
+    const [news, setNews] = useState([]);
+    useEffect(() => {
+        fetch("https://newsapi.org/v2/everything?q=животные&sources=lenta&apiKey=6c7fc5e6a754429ab47063a1b1a54774")
+            .then(res => res.json())
+            .then(data => {
+                console.log(data);
+                setNews(data.articles)
+            })
+    }, [])
     const [modalActive, setModalActive] = useState(false);
 
     // useEffect срабатывает каждый раз, когда компонент создался или перерисовался
@@ -77,7 +88,8 @@ const App = () => {
 
     const ctxVal = {
         goods,
-        setGoods
+        setGoods,
+        news
     }
 
     return (
@@ -93,7 +105,8 @@ const App = () => {
         * */
         // <Ctx.Provider value={{
         //     goods: goods,
-        //     setGoods
+        //     setGoods,
+        //     news
         // }}>
         <Ctx.Provider value={ctxVal}>
             <Header 
