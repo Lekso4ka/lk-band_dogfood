@@ -1,7 +1,9 @@
 import Card from "../components/Card"
-import { useState } from "react";
+import { useState, useContext } from "react";
+import Ctx from "../context"
 
-const Catalog = ({goods, setServerGoods}) => {
+const Catalog = ({setServerGoods}) => {
+    const {goods} = useContext(Ctx)
     const [sort, setSort] = useState(null)
     const filterSt = {
         gridColumnEnd: "span 4",
