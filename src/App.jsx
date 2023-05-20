@@ -35,6 +35,8 @@ const App = () => {
     const [user, setUser] = useState(localStorage.getItem("rockUser"));
     const [token, setToken] = useState(localStorage.getItem("rockToken"));
     const [userId, setUserId] = useState(localStorage.getItem("rockId"));
+    // Поиск по сайту
+    const [text, setText] = useState("");
     // Товары из БД
     const [serverGoods, setServerGoods] = useState([]);
     // Товары для поиска и филтрации
@@ -86,29 +88,14 @@ const App = () => {
         console.log("u", user);
     }, [user]);
 
-    const ctxVal = {
-        goods,
-        setGoods,
-        news
-    }
-
     return (
-        // value - объект с данными контекста
-        /*
-        * age = 40
-        * {
-        *   name: "Vasya",
-        *   // age: 40
-        *   // age: age
-        *   age
-        * }
-        * */
-        // <Ctx.Provider value={{
-        //     goods: goods,
-        //     setGoods,
-        //     news
-        // }}>
-        <Ctx.Provider value={ctxVal}>
+        <Ctx.Provider value={{
+            goods: goods,
+            setGoods,
+            news,
+            text,
+            setText
+        }}>
             <Header 
                 user={user} 
                 setModalActive={setModalActive}

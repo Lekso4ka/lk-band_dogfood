@@ -4,9 +4,8 @@ import "./style.css";
 
 // arr - список товаров из json-файла
 const Search = ({arr}) => {
-	const {setGoods} = useContext(Ctx);
+	const {setGoods, text, setText} = useContext(Ctx);
 	// let text = "Corn";
-	const [text, setText] = useState("");
 	const [quantity, setQuantity] = useState(arr.length);
 	/*
 		useState = то, что создает пару из переменной и функции, которая ее изменяет
