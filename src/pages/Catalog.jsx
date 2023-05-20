@@ -1,9 +1,15 @@
-import Card from "../components/Card"
 import { useState, useContext } from "react";
+
+import Card from "../components/Card"
+import Pagination from "../components/Pagination";
+
+import usePagination from "../hooks/usePagination";
+
 import Ctx from "../context"
 
 const Catalog = ({setServerGoods}) => {
     const {goods} = useContext(Ctx)
+    const paginate = usePagination(goods, 20)
     const [sort, setSort] = useState(null)
     const filterSt = {
         gridColumnEnd: "span 4",
@@ -23,6 +29,7 @@ const Catalog = ({setServerGoods}) => {
         }
     }
     return <div className="container">
+        <div style={{gridColumnEnd: "span 4"}}><Pagination hk={paginate} /></div>
         <div style={filterSt}>
             {/* Сортировка по числу price*/}
             <button 

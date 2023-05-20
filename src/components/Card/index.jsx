@@ -56,7 +56,8 @@ const Card = ({
         <span className="card__like" onClick={updLike}>
             {isLike ? <ArrowThroughHeartFill/> : <ArrowThroughHeart/>}
         </span>
-        <img src={img} alt="Картинка" className="card__img"/>
+        {/*<div src={img} alt="Картинка" className="card__img"/>*/}
+        <span className="card__img2" style={{backgroundImage: `url(${img})`}}/>
         <span className="card__name">{name}</span>
         <span className="card__price">
             {discount > 0 
