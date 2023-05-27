@@ -93,9 +93,12 @@ const App = () => {
         <Ctx.Provider value={{
             goods: goods,
             setGoods,
+            setServerGoods,
             news,
             text,
-            setText
+            setText,
+            userId,
+            token
         }}>
             <Header 
                 user={user} 

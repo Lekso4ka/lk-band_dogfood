@@ -1,17 +1,82 @@
 import {useState} from "react";
 import {Container, Row, Col, Form, Button} from "react-bootstrap";
-
+import {useNavigate} from "react-router-dom";
 
 
 const Add = () => {
+    const navigate = useNavigate();
     const [description, setDescription] = useState("Тут пока ничего нет...");
     const [discount, setDiscount] = useState(0);
     const [name, setName] = useState("");
     const [pictures, setPictures] = useState("https://images.squarespace-cdn.com/content/v1/5df593004b4fbe1087bac34c/1576543624492-FHJRWX9Q0O95BC1YCTY6/koba-gsd-geo-2.png");
     const [price, setPrice] = useState(100);
     const [stock, setStock] = useState(200);
+    const [tag, setTag] = useState("");
     const [tags, setTags] = useState(["df"]);
     const [wight, setWight] = useState("100 г");
+
+    const updTag = (val) => {
+        // Привести к общему регистру
+        const text = val.toLocaleLowerCase();
+        // получить строку без последнего символа (вдруг там пробел или запятая)
+        let cut = text.slice(0, text.length - 1);
+        // Проверить строку на последний символ
+        if (/[\s.,;!?]$/.test(text)) {
+            // Если пробел или знак препинания - обрубить этот символ и записать в массив с тегами
+            // Надо проверять насколько такого тега еще не существует
+            setTags(prev => prev.includes(cut) ? prev : [...prev, cut]);
+            // очистить инпут
+            setTag("");
+        } else {
+            // идем дальше
+            setTag(text);
+        }
+    }
+
+    const delTag = (tag) => {
+        setTags(prev => prev.filter(tg => tg !== tag))
+    }
+
+    const clearForm = () => {
+        setName("");
+        setPrice(100);
+        setPictures("https://images.squarespace-cdn.com/content/v1/5df593004b4fbe1087bac34c/1576543624492-FHJRWX9Q0O95BC1YCTY6/koba-gsd-geo-2.png");
+        setDiscount(0);
+        setDescription("Тут пока ничего нет...");
+        setWight("100 г");
+        setStock(200);
+        setTags(["df"]);
+    }
+
+    const formHandler = (e) => {
+        e.preventDefault();
+        const body = {
+            name,
+            price,
+            pictures,
+            discount,
+            wight,
+            stock,
+            description,
+            tags: tag.length && !tags.includes(tag) ? [...tags, tag] : tags
+        }
+        fetch("https://api.react-learning.ru/products", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${localStorage.getItem("rockToken")}`
+            },
+            body: JSON.stringify(body)
+        })
+            .then(res => res.json())
+            .then(data => {
+                console.log(data)
+                if (!data.err && !data.error) {
+                    clearForm();
+                    navigate(`/product/${data._id}`)
+                }
+            })
+    }
 
     return <Container className="bs bg-light text-dark rounded-1 p-4">
         <Row>
@@ -19,7 +84,7 @@ const Add = () => {
                 <h1>Добавить товар</h1>
             </Col>
         </Row>
-        <Form>
+        <Form onSubmit={formHandler}>
             <Row>
                 <Col xs={12} sm={6}>
                     <Form.Group className="my-3">
@@ -92,9 +157,19 @@ const Add = () => {
                         <Form.Control
                             type="text"
                             id="tags"
-                            value={tags}
-                            onChange={(e) => setTags(e.target.value)}
+                            value={tag}
+                            onChange={(e) => updTag(e.target.value)}
                         />
+                        {tags.length > 0 && <Form.Text>
+                            {tags.map(t => <span
+                                className={`d-inline-block lh-1 ${t !== "df" ? "bg-info" : "bg-secondary"} text-light p-2 mt-2 me-2 rounded-1 `}
+                                key={t}
+                                onClick={() => delTag(t)}
+                                style={{
+                                    pointerEvents: t === "df" ? "none" : "auto"
+                                }}
+                            >{t}</span>)}
+                        </Form.Text>}
                     </Form.Group>
                 </Col>
                 <Col xs={12} sm={6}>
