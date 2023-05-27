@@ -5,7 +5,8 @@ import {
     Star, 
     Cart4, 
     PersonSquare, 
-    BoxArrowInRight
+    BoxArrowInRight,
+    PlusSquare
 } from "react-bootstrap-icons";
 import { useState, useEffect } from "react";
 
@@ -29,6 +30,9 @@ const Header = ({user, setModalActive, serverGoods}) => {
         <nav className="header__menu">
             {/* Если пользователь === true */}
             {user && <>
+                <Link to="/add" title="Добавить товар"  className="badge-el">
+                    <PlusSquare/>
+                </Link>
                 <Link to="/catalog" title="Каталог" className="badge-el">
                     <Folder2/>
                     {/* <span className="badge-item">{serverGoods.length}</span> */}
