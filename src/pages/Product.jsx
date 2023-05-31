@@ -9,15 +9,10 @@ const Product = () => {
     const [product, setProduct] = useState({});
     const {id} = useParams();
     const navigate = useNavigate();
-    const {token, userId, setServerGoods} = useContext(Ctx);
+    const {userId, setServerGoods, api} = useContext(Ctx);
 
     useEffect(() => {
-        fetch(`https://api.react-learning.ru/products/${id}`, {
-            headers: {
-                "Authorization": `Bearer ${localStorage.getItem("rockToken")}`
-            }
-        })
-            .then(res => res.json())
+        api.getSingleProduct(id)
             .then(data => {
                 if (!data.err) {
                     console.log(data);
@@ -33,13 +28,7 @@ const Product = () => {
     */
 
     const del = () => {
-        fetch(`https://api.react-learning.ru/products/${id}`, {
-            method: "DELETE",
-            headers: {
-                "Authorization": `Bearer ${token}`
-            }
-        })
-            .then(res => res.json())
+        api.delProduct(id)
             .then(data => {
                 console.log(data);
                 setServerGoods(prev => prev.filter(el => el._id !== id))

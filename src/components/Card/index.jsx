@@ -1,7 +1,8 @@
-import {useState} from "react";
+import { useState, useContext } from "react";
 import "./style.css";
 import { Link } from "react-router-dom";
-import { ArrowThroughHeart, ArrowThroughHeartFill, Percent } from "react-bootstrap-icons"
+import { ArrowThroughHeart, ArrowThroughHeartFill, Percent } from "react-bootstrap-icons";
+import Ctx from "../../context";
 
 // {img, name, price} => props (props.img, props.name, props.price)
 const Card = ({
@@ -11,42 +12,31 @@ const Card = ({
     _id, 
     discount, 
     tags, 
-    likes,
-    setServerGoods
+    likes
 }) => {
+    const { setServerGoods, userId, api } = useContext(Ctx);
     // проверка, есть ли id пользователя в массиве с лайками товара
-    const [isLike, setIsLike] = useState(likes.includes(localStorage.getItem("rockId")));
+    const [isLike, setIsLike] = useState(likes.includes(userId));
+
+
 
     const updLike = (e) => {
         e.stopPropagation();
         e.preventDefault();
         setIsLike(!isLike);
-        const token = localStorage.getItem("rockToken");
-        fetch(`https://api.react-learning.ru/products/likes/${_id}`, {
-            method: isLike ? "DELETE" : "PUT",
-            headers: {
-                "Authorization": `Bearer ${token}`
-            }
-        })
-            .then(res => res.json())
+        api.setLike(_id, !isLike)
             .then(data => {
-                // 644d15d48fbc473fa8a08aa4
                 console.log(data);
-                // Изменить основной массив с товарами внутри React (на стороне клиента)
-                // Если внутри функции set... (useState) находится callback, то его аргументом является старое состояние (то, что было до изменения) - в нашем случае мы назвали его "old"
-                // callback обязательно должен вернуть новые данные
                 setServerGoods(function(old) {
                     console.log(old)
-                    // Нам надо из массива взять одну карточку и заменить ее. При этом, положение карточки в массиве не должно поменяться. Наилучший способ пройтись по массиву, изменив часть его - это метод map
                     const arr = old.map(el => {
-                        // для каждого элемента массива с товарами
-                        if (el._id === _id) { // если id товара является тем же, что и у измененного товара
-                            return data; // то я заменяю товар в общем массиве на обновленный
-                        } else { // иначе
-                            return el; // ничего не делаю
+                        if (el._id === _id) {
+                            return data;
+                        } else {
+                            return el;
                         }
                     }); 
-                    return arr; // возвращаем новый массив
+                    return arr;
                 })
             })
     }

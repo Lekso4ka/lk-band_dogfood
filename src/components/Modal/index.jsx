@@ -1,4 +1,6 @@
-import { useState } from "react";
+import { useState, useContext } from "react";
+
+import Ctx from "../../context";
 import "./style.css";
 
 const Modal = ({active, setActive, setUser}) => {
@@ -7,6 +9,8 @@ const Modal = ({active, setActive, setUser}) => {
 	const [email, setEmail] = useState("");
 	const [pwd, setPwd] = useState("");
 	const [testPwd, setTestPwd] = useState("");
+
+	const { api } = useContext(Ctx);
 
 	const testAccess = {
 		color: pwd === testPwd ? "forestgreen" : "crimson"
@@ -35,36 +39,13 @@ const Modal = ({active, setActive, setUser}) => {
 			body.name = name;
 			body.group = "group-12";
 		}
-		let log = "https://api.react-learning.ru/signin"; // вход
-		let reg = "https://api.react-learning.ru/signup"; // регистрация
 
-		// Регистрация !== вход (после добавления пользователя в БД, нужно будет повторно войти в аккаунт)
-		let res = await fetch(auth ? log : reg, {
-			method: "POST",
-			headers: {
-				"Content-Type": "application/json"
-			},
-			body: JSON.stringify(body)
-		})
-		let data = await res.json()
+		let data = await (auth ? api.auth(body) : api.reg(body))
 		if (!data.err) {
-			// При регистрации с сервера приходит объект о пользователе {name, email, _id, group}
-			/* при входе с сервера приходит два параметра: 
-				1) токен (без него мы не сможем работать с сервером дальше)
-				2) тоже что и при регистрации
-				{data: {...}, token: ""}
-			*/
 			if (!auth) {
 				delete body.name;
-				delete body.group
-				let resLog = await fetch(log, {
-					method: "POST",
-					headers: {
-						"Content-Type": "application/json"
-					},
-					body: JSON.stringify(body)
-				})
-				let dataLog = await resLog.json()
+				delete body.group;
+				let dataLog = await api.auth(body);
 				if (!dataLog.err) {
 					localStorage.setItem("rockUser", dataLog.data.name);
 					localStorage.setItem("rockToken", dataLog.token);

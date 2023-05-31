@@ -21,8 +21,6 @@ import Favorites from "./pages/Favorites";
 import Add from './pages/AddProduct';
 
 const App = () => {
-    // let key = "6c7fc5e6a754429ab47063a1b1a54774"
-    "https://newsapi.org/v2/everything?apiKey=6c7fc5e6a754429ab47063a1b1a54774&q=dogs"
     const [user, setUser] = useState(localStorage.getItem("rockUser"));
     const [token, setToken] = useState(localStorage.getItem("rockToken"));
     const [userId, setUserId] = useState(localStorage.getItem("rockId"));
@@ -36,14 +34,14 @@ const App = () => {
     const [news, setNews] = useState([]);
     const [api, setApi] = useState(new Api(token));
 
-    useEffect(() => {
-        fetch("https://newsapi.org/v2/everything?q=животные&sources=lenta&apiKey=6c7fc5e6a754429ab47063a1b1a54774")
-            .then(res => res.json())
-            .then(data => {
-                console.log(data);
-                setNews(data.articles)
-            })
-    }, [])
+    // useEffect(() => {
+    //     fetch("https://newsapi.org/v2/everything?q=животные&sources=lenta&apiKey=6c7fc5e6a754429ab47063a1b1a54774")
+    //         .then(res => res.json())
+    //         .then(data => {
+    //             console.log(data);
+    //             setNews(data.articles)
+    //         })
+    // }, [])
     const [modalActive, setModalActive] = useState(false);
 
     // useEffect срабатывает каждый раз, когда компонент создался или перерисовался
