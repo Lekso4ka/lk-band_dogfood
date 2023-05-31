@@ -3,18 +3,8 @@ import {Routes, Route} from "react-router-dom";
 
 // подключаем контекст
 import Ctx from "./context";
-/*
-    <Ctx.Provider>
-        <CtxUser.Provider>
-            <Header/>
-            <Modal/>
-        </CtxUser.Provider>
-        <Component3/>
-        <Component4/>
-        <Component5/>
-    </Ctx.Provider>
-*/
-
+// подключаем API
+import Api from "./api";
 
 // компоненты (кусочки кода, которые используются многократно)
 import {Header, Footer} from "./components/General";
@@ -44,6 +34,8 @@ const App = () => {
     const [goods, setGoods] = useState(serverGoods);
     // Получаем новости
     const [news, setNews] = useState([]);
+    const [api, setApi] = useState(new Api(token));
+
     useEffect(() => {
         fetch("https://newsapi.org/v2/everything?q=животные&sources=lenta&apiKey=6c7fc5e6a754429ab47063a1b1a54774")
             .then(res => res.json())
@@ -56,19 +48,18 @@ const App = () => {
 
     // useEffect срабатывает каждый раз, когда компонент создался или перерисовался
     useEffect(() => {
-        if (token) {
-            fetch("https://api.react-learning.ru/products", {
-                headers: {
-                    "Authorization": `Bearer ${token}`
-                }
-            })
-                .then(res => res.json())
+        setApi(new Api(token));
+    }, [token])
+
+    useEffect(() => {
+        if (api.token) {
+            api.getProduct()
                 .then(data => {
                     console.log(data);
                     setServerGoods(data.products.sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime()));
                 })
         }
-    }, [token])
+    }, [api.token])
 
     useEffect(() => {
         if (!goods.length) {
@@ -98,7 +89,8 @@ const App = () => {
             text,
             setText,
             userId,
-            token
+            token,
+            api
         }}>
             <Header 
                 user={user} 

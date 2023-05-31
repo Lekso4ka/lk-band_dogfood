@@ -92,7 +92,7 @@ const Modal = ({active, setActive, setUser}) => {
 		className="modal-wrapper"
 		style={{display: active ? "flex" : "none"}}
 	>
-		<div className="modal">
+		<div className="my-modal">
 			<button onClick={() => setActive(false)}>Закрыть окно</button>
 			<h3>Авторизация</h3>
 			<form onSubmit={sendForm}>
