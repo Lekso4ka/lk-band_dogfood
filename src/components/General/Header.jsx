@@ -8,15 +8,27 @@ import {
     BoxArrowInRight,
     PlusSquare
 } from "react-bootstrap-icons";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
+
+import Ctx from "../../context";
 
 const Header = ({user, setModalActive, serverGoods}) => {
     const [likeCnt, setLikeCnt] = useState(0);
     const [cartCnt, setCartCnt] = useState(0);
+    const {basket} = useContext(Ctx);
     useEffect(() => {
         // Фильтруем только те товары, у которых в лайках есть id нашего пользователя - id берем из ls, ибо мы про него забыли))
         setLikeCnt(serverGoods.filter(el => el.likes.includes(localStorage.getItem("rockId"))).length)
     }, [serverGoods]);
+
+    useEffect(() => {
+        // let cnt = 0;
+        // for (let i = 0; i < basket.length; i++) {
+        //     cnt += basket[i].cnt
+        // }
+        // setCartCnt(cnt);
+        setCartCnt(basket.reduce((acc, el) => acc + el.cnt, 0))
+    }, [basket])
 
     const logIn = (e) => {
         e.preventDefault();
