@@ -53,7 +53,7 @@ const Header = ({user, setModalActive, serverGoods}) => {
                     <Star/>
                     <span className="badge-item">{likeCnt}</span>
                 </Link>
-                <Link to="/" title="Корзина" className="badge-el">
+                <Link to="/basket" title="Корзина" className="badge-el">
                     <Cart4/>
                     <span className="badge-item">{cartCnt}</span>
                 </Link>

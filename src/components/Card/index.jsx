@@ -14,11 +14,24 @@ const Card = ({
     tags, 
     likes
 }) => {
-    const { setServerGoods, userId, api } = useContext(Ctx);
+    const { setServerGoods, userId, api, setBasket, serverGoods, basket } = useContext(Ctx);
     // проверка, есть ли id пользователя в массиве с лайками товара
     const [isLike, setIsLike] = useState(likes.includes(userId));
+    const [inBasket, setInBasket] = useState(basket.filter(el => el.id === _id).length > 0)
 
-
+    const addToCart  = (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        setInBasket(true);
+        setBasket(prev => [...prev, {
+            id: _id,
+            cnt: 1,
+            name: name,
+            img: img,
+            price: price,
+            discount: discount
+        }])
+    }
 
     const updLike = (e) => {
         e.stopPropagation();
@@ -59,7 +72,11 @@ const Card = ({
                 : price
             } 
         &nbsp;₽</span>
-        <button className="card__btn">В корзину</button>
+        <button
+            className="card__btn"
+            onClick={addToCart}
+            disabled={inBasket}
+        >В корзину</button>
         {/* <span className="card__tags">
             {tags.map(el => <span key={el}>{el}</span>)}
         </span> */}

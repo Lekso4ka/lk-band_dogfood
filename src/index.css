@@ -37,3 +37,41 @@ main {
 .container.bs {
   display: block;
 }
+table {
+  width: 100%;
+  background-color: white;
+  color: #222;
+  border-radius: 1rem;
+  overflow: hidden;
+}
+td {
+  padding: .6rem 1rem;
+}
+td:first-child {
+  text-align: center;
+}
+thead td {
+  text-align: center;
+  font-weight: bold;
+}
+tbody td {
+  border-bottom: 1px solid silver;
+
+}
+tfoot td {
+  vertical-align: bottom;
+  line-height: 1;
+}
+tfoot td:first-child {
+  text-align: right;
+  text-transform: uppercase;
+}
+tfoot td:last-child {
+  font-size: 2em;
+  font-weight: bold;
+}
+tfoot del {
+  padding-left: 12px;
+  font-size: .8em;
+  color: silver;
+}
