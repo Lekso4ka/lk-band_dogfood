@@ -77,9 +77,9 @@ const Card = ({
             onClick={addToCart}
             disabled={inBasket}
         >В корзину</button>
-        {/* <span className="card__tags">
+        { <span className="card__tags">
             {tags.map(el => <span key={el}>{el}</span>)}
-        </span> */}
+        </span> }
     </Link>
 }
 

@@ -69,7 +69,8 @@ const App = () => {
             api.getProduct()
                 .then(data => {
                     console.log(data);
-                    setServerGoods(data.products.sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime()));
+                    const result = data.products.filter(el => el.tags.includes("df"));
+                    setServerGoods(result.sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime()));
                 })
         }
     }, [api.token])

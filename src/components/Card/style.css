@@ -55,3 +55,14 @@
     padding: 4px;
     cursor: pointer;
 }
+.card__tags {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+}
+.card__tags span {
+    background-color: crimson;
+    color: #fff;
+    border-radius: 4px;
+    padding: 0 4px;
+}
